@@ -1,0 +1,353 @@
+/* ===== CSS VARIABLES & RESET ===== */
+:root {
+    --primary: #00f0ff;
+    --primary-dark: #00a8b3;
+    --secondary: #ff3366;
+    --accent: #ffcc00;
+    --success: #00ff88;
+    --danger: #ff4444;
+    --bg-dark: #0a0a0f;
+    --bg-medium: #12121a;
+    --bg-light: #1a1a25;
+    --bg-overlay: rgba(0, 0, 0, 0.85);
+    --text-primary: #ffffff;
+    --text-secondary: #aaaacc;
+    --text-muted: #666688;
+    --gradient-primary: linear-gradient(135deg, #00f0ff 0%, #0066ff 100%);
+    --glow-primary: 0 0 20px rgba(0, 240, 255, 0.5);
+    --glow-danger: 0 0 20px rgba(255, 68, 68, 0.5);
+    --font-display: 'Orbitron', sans-serif;
+    --font-body: 'Rajdhani', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    overflow: hidden;
+    user-select: none;
+}
+
+.menu-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.menu-screen.hidden {
+    display: none;
+}
+
+.menu-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #0a0a1a 0%, #1a0a2a 50%, #0a1a2a 100%);
+    z-index: -1;
+}
+
+.menu-background.blur {
+    backdrop-filter: blur(10px);
+    background: var(--bg-overlay);
+}
+
+.menu-background.red {
+    background: linear-gradient(135deg, #1a0a0a 0%, #2a0a0a 100%);
+}
+
+.menu-background.gold {
+    background: linear-gradient(135deg, #1a1a0a 0%, #2a200a 100%);
+}
+
+.menu-content {
+    text-align: center;
+    z-index: 1;
+}
+
+.game-logo {
+    margin-bottom: 20px;
+}
+
+.logo-text {
+    font-family: var(--font-display);
+    font-size: 5rem;
+    font-weight: 900;
+    letter-spacing: 0.3em;
+    text-shadow: 0 0 30px var(--primary);
+    color: var(--text-primary);
+    line-height: 1.1;
+}
+
+.logo-text.accent {
+    color: var(--primary);
+    font-size: 4rem;
+}
+
+.menu-subtitle {
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.5em;
+    margin-bottom: 60px;
+    text-transform: uppercase;
+}
+
+.menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+.menu-btn {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    padding: 18px 50px;
+    min-width: 320px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.menu-btn:hover {
+    border-color: var(--primary);
+    box-shadow: var(--glow-primary);
+    transform: translateY(-2px);
+}
+
+.menu-btn.primary {
+    background: var(--gradient-primary);
+    border: none;
+    color: var(--bg-dark);
+}
+
+.menu-footer {
+    margin-top: 60px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.panel-content {
+    background: rgba(20, 20, 30, 0.95);
+    border: 1px solid rgba(0, 240, 255, 0.2);
+    border-radius: 10px;
+    padding: 50px;
+    min-width: 400px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.panel-title {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    margin-bottom: 40px;
+    color: var(--primary);
+}
+
+.panel-title.death {
+    color: var(--danger);
+}
+
+.panel-title.victory {
+    color: var(--accent);
+}
+
+.settings-group {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.setting-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+.setting-label input[type="range"] {
+    flex: 1;
+    max-width: 200px;
+    height: 6px;
+    -webkit-appearance: none;
+    background: var(--bg-light);
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.setting-label input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    background: var(--primary);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.setting-label select {
+    background: var(--bg-light);
+    border: 1px solid rgba(0, 240, 255, 0.3);
+    color: var(--text-primary);
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-family: var(--font-body);
+    cursor: pointer;
+}
+
+.setting-label input[type="checkbox"] {
+    width: 24px;
+    height: 24px;
+    accent-color: var(--primary);
+    cursor: pointer;
+}
+#settings-name {
+    background: var(--bg-light);
+    border: 1px solid rgba(0, 240, 255, 0.3);
+    color: var(--text-primary);
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-family: var(--font-body);  
+}
+
+.controls-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 40px;
+}
+
+.control-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+}
+
+.control-item .key {
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 8px 12px;
+    background: var(--gradient-primary);
+    color: var(--bg-dark);
+    border-radius: 5px;
+    min-width: 80px;
+    text-align: center;
+}
+
+.control-item .action {
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+.death-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat-label {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.stat-value {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+
+/* Scoreboard Overlay */
+#scoreboard-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+#scoreboard-overlay.hidden {
+    display: none;
+}
+
+.scoreboard-content {
+    background: rgba(20, 20, 30, 0.9);
+    border: 2px solid var(--primary);
+    padding: 30px;
+    border-radius: 10px;
+    width: 600px;
+}
+
+.scoreboard-content h2 {
+    font-family: var(--font-display);
+    color: var(--primary);
+    text-align: center;
+    margin-bottom: 20px;
+    letter-spacing: 5px;
+}
+
+#scoreboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: white;
+}
+
+#scoreboard-table th,
+#scoreboard-table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#scoreboard-table th {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+#scoreboard-table tr.me {
+    background: rgba(0, 240, 255, 0.1);
+    color: var(--primary);
+}

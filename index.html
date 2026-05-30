@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Tactical Strike - An immersive 3D Multiplayer First-Person Shooter with server-authoritative combat, multiple weapons, and competitive gameplay.">
+    <title>AMPATUAN STRIKE</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/hud.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script>
+        window.onerror = function (msg, url, line, col, error) {
+            console.error('Error:', msg, 'at', url, line);
+        };
+    </script>
+</head>
+
+<body>
+    <!-- Game Canvas & Loading -->
+    <div id="game-container"></div>
+    <div id="loading-screen" class="visible">
+        <div class="loading-content">
+            <h2>LOADING</h2>
+            <div class="loading-bar">
+                <div id="loading-progress"></div>
+            </div>
+            <p id="loading-text">Connecting to server...</p>
+        </div>
+    </div>
+
+    <!-- Name Input Modal -->
+    <div id="name-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2>ENTER YOUR NAME</h2>
+            <input type="text" id="player-name-input" maxlength="16" placeholder="Player" autocomplete="off">
+            <button id="btn-confirm-name" class="menu-btn primary">CONTINUE</button>
+        </div>
+    </div>
+
+    <!-- Game Mode Selection Modal -->
+    <div id="team-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2 style="color: var(--primary); letter-spacing: 5px; margin-bottom: 30px;">CHOOSE GAME MODE</h2>
+            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                <button id="btn-game-tdm" class="menu-btn"
+                    style="background: rgba(200, 50, 50, 0.2); border: 2px solid #ff3333; min-width: 150px; margin: 10px;">
+                    <span style="color: #ff3333; font-weight: 900; letter-spacing: 1px; font-size: 0.9rem;">TEAM
+                        DEATHMATCH</span>
+                    <div style="font-size: 0.65rem; color: #aaa; margin-top: 3px;">5v5 Team Battle</div>
+                </button>
+                <button id="btn-game-ffa" class="menu-btn"
+                    style="background: rgba(50, 255, 50, 0.2); border: 2px solid #33ff33; min-width: 150px; margin: 10px;">
+                    <span style="color: #33ff33; font-weight: 900; letter-spacing: 1px; font-size: 0.9rem;">FREE FOR
+                        ALL</span>
+                    <div style="font-size: 0.65rem; color: #aaa; margin-top: 3px;">Every Player for Themselves</div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Team Selection Modal (for Team Deathmatch) -->
+    <div id="team-choice-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2 style="color: var(--primary); letter-spacing: 5px; margin-bottom: 30px;">CHOOSE YOUR TEAM</h2>
+            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                <button id="btn-team-red" class="menu-btn"
+                    style="background: rgba(255, 50, 50, 0.2); border: 2px solid #ff3333; min-width: 150px;">
+                    <span style="color: #ff3333; font-weight: 900; letter-spacing: 2px;">RED TEAM</span>
+                </button>
+                <button id="btn-team-blue" class="menu-btn"
+                    style="background: rgba(50, 100, 255, 0.2); border: 2px solid #3366ff; min-width: 150px;">
+                    <span style="color: #3366ff; font-weight: 900; letter-spacing: 2px;">BLUE TEAM</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Menu -->
+    <div id="main-menu" class="menu-screen hidden">
+        <div class="menu-background"></div>
+        <div class="menu-content">
+            <div class="game-logo">
+                <h1 class="logo-text">AMPATUAN</h1>
+                <h1 class="logo-text accent">STRIKE</h1>
+            </div>
+            <div class="menu-subtitle">Multiplayer First-Person Shooter</div>
+
+
+
+            <nav class="menu-buttons">
+                <button id="btn-start" class="menu-btn primary">
+                    <span class="btn-icon">▶</span>
+                    <span class="btn-text">PLAY NOW</span>
+                </button>
+                <button id="btn-settings" class="menu-btn">
+                    <span class="btn-icon"></span>
+                    <span class="btn-text">SETTINGS</span>
+                </button>
+                <button id="btn-controls" class="menu-btn">
+                    <span class="btn-icon"></span>
+                    <span class="btn-text">CONTROLS</span>
+                </button>
+                <button id="btn-quit" class="menu-btn">
+                    <span class="btn-icon"></span>
+                    <span class="btn-text">QUIT</span>
+                </button>
+            </nav>
+            <div class="menu-footer">
+                <p>Press TAB for scoreboard • ENTER to chat</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Panel -->
+    <div id="settings-panel" class="menu-screen hidden">
+        <div class="menu-background"></div>
+        <div class="panel-content">
+            <h2 class="panel-title">SETTINGS</h2>
+            <div class="settings-group">
+                <label class="setting-label">
+                    <span>Player Name</span>
+                    <input type="text" id="settings-name" maxlength="16" placeholder="Player">
+                </label>
+                <label class="setting-label">
+                    <span>Mouse Sensitivity</span>
+                    <input type="range" id="sensitivity" min="0.1" max="2" step="0.1" value="0.5">
+                    <span id="sensitivity-value">0.5</span>
+                </label>
+                <label class="setting-label">
+                    <span>Master Volume</span>
+                    <input type="range" id="volume" min="0" max="1" step="0.1" value="0.7">
+                    <span id="volume-value">70%</span>
+                </label>
+                <label class="setting-label">
+                    <span>Crosshair Color</span>
+                    <select id="crosshair-color">
+                        <option value="white">White</option>
+                        <option value="green" selected>Green</option>
+                        <option value="red">Red</option>
+                        <option value="cyan">Cyan</option>
+                        <option value="yellow">Yellow</option>
+                    </select>
+                </label>
+                <label class="setting-label checkbox">
+                    <span>Show FPS Counter</span>
+                    <input type="checkbox" id="show-fps" checked>
+                </label>
+                <label class="setting-label checkbox">
+                    <span>Show Minimap</span>
+                    <input type="checkbox" id="show-minimap" checked>
+                </label>
+                <label class="setting-label checkbox">
+                    <span>Enable ADS (Non-Sniper)</span>
+                    <input type="checkbox" id="enable-ads">
+                </label>
+            </div>
+            <button id="btn-settings-back" class="menu-btn">BACK</button>
+        </div>
+    </div>
+
+    <!-- Controls Panel -->
+    <div id="controls-panel" class="menu-screen hidden">
+        <div class="menu-background"></div>
+        <div class="panel-content">
+            <h2 class="panel-title">CONTROLS</h2>
+            <div class="controls-grid">
+                <div class="control-item"><span class="key">W A S D</span><span class="action">Move</span></div>
+                <div class="control-item"><span class="key">MOUSE</span><span class="action">Look Around</span></div>
+                <div class="control-item"><span class="key">LEFT CLICK</span><span class="action">Shoot</span></div>
+                <div class="control-item"><span class="key">RIGHT CLICK</span><span class="action">Aim Down
+                        Sights</span></div>
+                <div class="control-item"><span class="key">SPACE</span><span class="action">Jump</span></div>
+                <div class="control-item"><span class="key">SHIFT</span><span class="action">Sprint</span></div>
+                <div class="control-item"><span class="key">R</span><span class="action">Reload</span></div>
+                <div class="control-item"><span class="key">1-7</span><span class="action">Switch Weapons</span></div>
+                <div class="control-item"><span class="key">TAB</span><span class="action">Scoreboard</span></div>
+                <div class="control-item"><span class="key">ENTER</span><span class="action">Chat</span></div>
+                <div class="control-item"><span class="key">Q</span><span class="action">Previous Weapon</span></div>
+                <div class="control-item"><span class="key">ESC</span><span class="action">Pause Menu</span></div>
+            </div>
+            <button id="btn-controls-back" class="menu-btn">BACK</button>
+        </div>
+    </div>
+
+    <!-- Pause Menu -->
+    <div id="pause-menu" class="menu-screen hidden">
+        <div class="menu-background blur"></div>
+        <div class="panel-content">
+            <h2 class="panel-title">PAUSED</h2>
+            <nav class="menu-buttons">
+                <button id="btn-resume" class="menu-btn primary">RESUME</button>
+                <button id="btn-restart" class="menu-btn">RESTART</button>
+                <button id="btn-main-menu" class="menu-btn">MAIN MENU</button>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Death Screen -->
+    <div id="death-screen" class="menu-screen hidden">
+        <div class="menu-background red"></div>
+        <div class="panel-content">
+            <h2 class="panel-title death">ELIMINATED</h2>
+            <div class="death-info">
+                <p>Killed by <span id="killer-name">Unknown</span></p>
+                <p>Respawning in <span id="respawn-countdown" style="color: #ff3333; font-weight: bold;">3</span>
+                    seconds...</p>
+            </div>
+            <div class="death-stats">
+                <div class="stat">
+                    <span class="stat-label">Your Kills</span>
+                    <span class="stat-value" id="death-kills">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Your Deaths</span>
+                    <span class="stat-value" id="death-deaths">0</span>
+                </div>
+            </div>
+            <nav class="menu-buttons">
+                <button id="btn-respawn" class="menu-btn primary">RESPAWN NOW</button>
+                <button id="btn-death-menu" class="menu-btn">MAIN MENU</button>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Match End Screen -->
+    <div id="match-end-screen" class="menu-screen hidden">
+        <div class="menu-background gold"></div>
+        <div class="panel-content">
+            <h2 class="panel-title victory" id="match-end-title">MATCH COMPLETE</h2>
+            <div class="winner-info">
+                <p>Winner: <span id="winner-name">Unknown</span></p>
+            </div>
+            <div id="match-end-stats" class="leaderboard-stats">
+                <!-- Dynamic content -->
+            </div>
+            <nav class="menu-buttons">
+                <button id="btn-play-again" class="menu-btn primary">PLAY AGAIN</button>
+                <button id="btn-victory-menu" class="menu-btn">MAIN MENU</button>
+            </nav>
+            <p class="next-match-info">Next match starting soon...</p>
+        </div>
+    </div>
+
+    <!-- Scoreboard -->
+    <div id="scoreboard-overlay" class="hidden">
+        <div class="scoreboard-content">
+            <div class="scoreboard-header">
+                <h2>SCOREBOARD</h2>
+                <div class="match-info">
+                    <span id="scoreboard-timer">10:00</span>
+                    <span class="separator">|</span>
+                    <span>First to <span id="scoreboard-kill-limit">30</span> kills</span>
+                </div>
+            </div>
+            <table id="scoreboard-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>PLAYER</th>
+                        <th>KILLS</th>
+                        <th>DEATHS</th>
+                        <th>K/D</th>
+                        <th>PING</th>
+                    </tr>
+                </thead>
+                <tbody id="scoreboard-body">
+                    <!-- Dynamic content -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Chat Box -->
+    <div id="chat-container" class="hidden">
+        <div id="chat-messages"></div>
+        <div id="chat-input-container" class="hidden">
+            <input type="text" id="chat-input" maxlength="200" placeholder="Type a message...">
+        </div>
+    </div>
+
+    <!-- Game HUD -->
+    <div id="game-hud" class="hidden">
+        <!-- Crosshair -->
+        <div id="crosshair">
+            <div class="crosshair-line top"></div>
+            <div class="crosshair-line right"></div>
+            <div class="crosshair-line bottom"></div>
+            <div class="crosshair-line left"></div>
+            <div class="crosshair-dot"></div>
+        </div>
+
+        <!-- Sniper Scope Overlay -->
+        <div id="sniper-scope" class="hidden">
+            <div class="scope-overlay"></div>
+        </div>
+
+        <!-- Team Score HUD -->
+        <div id="team-score-hud"
+            style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 40px; font-family: var(--font-display); background: rgba(0,0,0,0.6); padding: 5px 30px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.1); z-index: 100;">
+            <div id="score-red" style="color: #ff3333; text-align: center;">
+                <div style="font-size: 0.7rem; letter-spacing: 2px;">RED</div>
+                <div id="red-score-val" style="font-size: 1.8rem; font-weight: 900;">0</div>
+            </div>
+            <div id="match-timer"
+                style="display: flex; align-items: center; border-left: 1px solid rgba(255,255,255,0.2); border-right: 1px solid rgba(255,255,255,0.2); padding: 0 20px;">
+                <span id="timer-value" style="font-size: 1.2rem; color: #fff;">10:00</span>
+            </div>
+            <div id="score-blue" style="color: #3366ff; text-align: center;">
+                <div style="font-size: 0.7rem; letter-spacing: 2px;">BLUE</div>
+                <div id="blue-score-val" style="font-size: 1.8rem; font-weight: 900;">0</div>
+            </div>
+        </div>
+
+        <!-- Kill Counter -->
+        <div id="kill-counter">
+            <span id="my-kills">0</span>
+            <span class="separator">/</span>
+            <span id="kill-limit">30</span>
+        </div>
+
+        <!-- Health Bar -->
+        <div id="health-container">
+            <div class="hud-icon">❤</div>
+            <div class="health-bar">
+                <div id="health-fill"></div>
+                <span id="health-text">100</span>
+            </div>
+        </div>
+
+        <!-- Spawn Protection Indicator -->
+        <div id="spawn-protection" class="hidden">
+            <span>⛨ SPAWN PROTECTED</span>
+        </div>
+
+        <!-- Ammo Counter -->
+        <div id="ammo-container">
+            <div class="ammo-display">
+                <span id="current-ammo">30</span>
+                <span class="ammo-separator">/</span>
+                <span id="reserve-ammo">90</span>
+            </div>
+            <div id="weapon-name">ASSAULT RIFLE</div>
+        </div>
+
+        <!-- Weapon Slots -->
+        <div id="weapon-slots">
+            <div class="weapon-slot active" data-slot="1">
+                <span class="slot-number">1</span>
+                <span class="slot-name">AR</span>
+            </div>
+            <div class="weapon-slot" data-slot="2">
+                <span class="slot-number">2</span>
+                <span class="slot-name">PST</span>
+            </div>
+            <div class="weapon-slot" data-slot="3">
+                <span class="slot-number">3</span>
+                <span class="slot-name">SHR</span>
+            </div>
+            <div class="weapon-slot" data-slot="4">
+                <span class="slot-number">4</span>
+                <span class="slot-name">SG</span>
+            </div>
+            <div class="weapon-slot" data-slot="5">
+                <span class="slot-number">5</span>
+                <span class="slot-name">SMG</span>
+            </div>
+            <div class="weapon-slot" data-slot="6">
+                <span class="slot-number">6</span>
+                <span class="slot-name">SR</span>
+            </div>
+            <div class="weapon-slot" data-slot="7">
+                <span class="slot-number">7</span>
+                <span class="slot-name">RPG</span>
+            </div>
+        </div>
+
+        <!-- Mini Map -->
+        <div id="minimap-container">
+            <canvas id="minimap" width="150" height="150"></canvas>
+        </div>
+
+        <!-- Kill Feed -->
+        <div id="kill-feed"></div>
+
+        <!-- FPS Counter -->
+        <div id="fps-counter">FPS: 60</div>
+
+        <!-- Ping Display -->
+        <div id="ping-display">PING: 0ms</div>
+
+        <!-- Damage Indicator -->
+        <div id="damage-overlay"></div>
+
+        <!-- Reload Indicator -->
+        <div id="reload-indicator" class="hidden">
+            <div class="reload-text">RELOADING</div>
+            <div class="reload-bar">
+                <div id="reload-progress"></div>
+            </div>
+        </div>
+
+        <!-- Hit Marker -->
+        <div id="hit-marker" class="hidden">
+            <div class="hit-line"></div>
+            <div class="hit-line"></div>
+            <div class="hit-line"></div>
+            <div class="hit-line"></div>
+        </div>
+
+        <!-- Kill Notification -->
+        <div id="kill-notification" class="hidden">
+            <span class="kill-icon">☠</span>
+            <span id="kill-notification-text">You eliminated Player</span>
+        </div>
+
+        <!-- Headshot Notification -->
+        <div id="headshot-notification" class="hidden">
+            <span>HEADSHOT!</span>
+        </div>
+
+        <!-- Mobile Controls -->
+        <div id="mobile-controls" class="hidden">
+            <div id="joystick-zone">
+                <div id="joystick-base"></div>
+                <div id="joystick-knob"></div>
+            </div>
+
+            <div id="mobile-actions">
+                <button id="btn-mobile-shoot" class="mobile-btn huge">🔥</button>
+                <div class="mobile-secondary-actions">
+                    <button id="btn-mobile-jump" class="mobile-btn">⬆</button>
+                    <button id="btn-mobile-reload" class="mobile-btn">R</button>
+                    <button id="btn-mobile-aim" class="mobile-btn">🎯</button>
+                    <button id="btn-mobile-switch" class="mobile-btn">⚔</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Instructions overlay for pointer lock -->
+    <div id="pointer-lock-instructions" class="hidden">
+        <p>Click to play</p>
+    </div>
+
+
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/game.js?v=11"></script>
+</body>
+
+</html>

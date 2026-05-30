@@ -1,0 +1,25 @@
+{
+  "name": "tactical-strike-fps",
+  "version": "2.0.0",
+  "description": "Multiplayer 3D First-Person Shooter",
+  "main": "server.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.7.2"
+  },
+  "keywords": [
+    "fps",
+    "game",
+    "threejs",
+    "multiplayer",
+    "socket.io"
+  ],
+  "author": "",
+  "license": "MIT"
+}
